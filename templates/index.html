@@ -70,6 +70,7 @@ h1 {
   min-height: 75px;
   margin: 25px auto 30px;
   padding: 8px 2px;
+  background: white;
   color: #603449;
   font-size: 27px;
   font-weight: 800;
@@ -77,19 +78,18 @@ h1 {
   text-align: center;
   white-space: nowrap;
   overflow: visible;
-  background: white;
 }
 
-/* ခလုတ်နှစ်ခု ဘေးတိုက်ယှဉ်လျက် */
+/* YES အပေါ်၊ NO အောက် */
 .buttons {
   position: relative;
   width: 100%;
-  height: 125px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  height: 190px;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 18px;
   overflow: visible;
   isolation: isolate;
 }
@@ -97,14 +97,10 @@ h1 {
 button {
   border: none;
   border-radius: 22px;
-  width: 100%;
   min-width: 0;
-  min-height: 75px;
-  padding: 14px 5px;
   color: white;
   font-family: inherit;
   font-weight: bold;
-  font-size: clamp(16px, 4.5vw, 23px);
   white-space: nowrap;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -113,7 +109,12 @@ button {
 #yes {
   background: #20b45a;
   position: relative;
-  z-index: 5;
+  z-index: 10;
+  width: 80%;
+  max-width: 330px;
+  min-height: 85px;
+  padding: 15px 8px;
+  font-size: clamp(20px, 5.5vw, 27px);
   transform: scale(1);
   transform-origin: center center;
   transition: transform 0.22s ease;
@@ -123,18 +124,23 @@ button {
   background: #f16b65;
   position: relative;
   z-index: 6;
+  width: 65%;
+  max-width: 270px;
+  min-height: 70px;
+  padding: 14px 8px;
+  font-size: clamp(18px, 4.8vw, 23px);
   visibility: visible;
-  transform: scale(1);
   transition: transform 0.22s ease;
 }
 
-/* ၈ ကြိမ်မြောက်မှာ YES က NO ကို ဖုံးမယ် */
+/* ၈ ကြိမ်မြောက်တွင် YES က NO နေရာကို အပြည့်ဖုံးမယ် */
 .buttons.final-step #yes {
   position: absolute;
-  z-index: 10;
+  z-index: 15;
   left: 0;
   top: 0;
   width: 100%;
+  max-width: none;
   height: 100%;
   min-height: 100%;
   transform: none !important;
@@ -199,13 +205,21 @@ button {
     padding-right: 8px;
   }
 
-  .buttons {
-    gap: 8px;
+  #text {
+    margin-top: 20px;
+    margin-bottom: 25px;
   }
 
-  button {
-    padding-left: 3px;
-    padding-right: 3px;
+  .buttons {
+    gap: 15px;
+  }
+
+  #yes {
+    width: 82%;
+  }
+
+  #no {
+    width: 68%;
   }
 }
 </style>
@@ -229,28 +243,30 @@ button {
 
 <div class="buttons" id="buttons">
 
-<button id="yes">ချစ်တယ် ❤️</button>
+  <button id="yes">ချစ်တယ် ❤️</button>
 
-<button id="no" disabled>ခဏစောင့်ပါ 💗</button>
+  <button id="no" disabled>ခဏစောင့်ပါ 💗</button>
 
 </div>
 
-<div id="loading">GIF ပုံများကို ကြိုတင်ပြင်ဆင်နေပါတယ် 💗</div>
+<div id="loading">
+GIF ပုံများကို ကြိုတင်ပြင်ဆင်နေပါတယ် 💗
+</div>
 
 </section>
 
 <section id="finish">
 
-<div class="headline">ယေး! 🎉</div>
+  <div class="headline">ယေး! 🎉</div>
 
-<div class="finaltext">
-ကိုယ်လည်း မင်းကို အရမ်းချစ်ပါတယ် ❤️
-</div>
+  <div class="finaltext">
+    ကိုယ်လည်း မင်းကို အရမ်းချစ်ပါတယ် ❤️
+  </div>
 
-<img
-  src="/static/gifs/yes.gif"
-  alt="Happy GIF"
->
+  <img
+    src="/static/gifs/yes.gif"
+    alt="Happy GIF"
+  >
 
 </section>
 
@@ -295,7 +311,7 @@ const buttons = document.getElementById('buttons');
 
 const preloadedGifs = [];
 
-/* စာသားကို တစ်ကြောင်းတည်း အကျယ်အဝန်းအတွင်း ဆန့်အောင်ချိန်မယ် */
+/* စာသားကို တစ်ကြောင်းတည်း ဆန့်အောင် ချိန်မယ် */
 function fitText(element, maxSize, minSize) {
   if (!element) return;
 
@@ -312,7 +328,7 @@ function fitText(element, maxSize, minSize) {
   }
 }
 
-/* GIF များကို ကြိုတင် Load လုပ်မယ် */
+/* GIF ကို ကြိုတင် Load လုပ်မယ် */
 function preloadGif(path) {
   return new Promise((resolve) => {
     const img = new Image();
@@ -324,6 +340,7 @@ function preloadGif(path) {
   });
 }
 
+/* GIF အားလုံးကို ကြိုတင် Load လုပ်မယ် */
 async function prepareGifs() {
   const paths = [
     '/static/gifs/intro.gif',
@@ -349,7 +366,7 @@ async function prepareGifs() {
   loading.style.display = 'none';
 }
 
-/* ကြိုတင် Load လုပ်ထားတဲ့ GIF ကို ချက်ချင်းပြောင်းမယ် */
+/* GIF ကို ချက်ချင်းပြောင်းမယ် */
 function changeGif(index) {
   const img = preloadedGifs[index + 1];
 
@@ -360,7 +377,7 @@ function changeGif(index) {
   }
 }
 
-/* NO နှိပ်တဲ့အခါ */
+/* NO ခလုတ်နှိပ်တဲ့အခါ */
 no.addEventListener('click', () => {
 
   if (finished || !gifsReady || clicks >= 8) {
@@ -369,26 +386,27 @@ no.addEventListener('click', () => {
 
   const index = clicks;
 
-  // စာသားနဲ့ GIF ကို တစ်ပြိုင်နက် ပြောင်းမယ်
+  // စာသားနဲ့ GIF တစ်ပြိုင်နက် ပြောင်းမယ်
   text.textContent = messages[index];
+
   changeGif(index);
 
   fitText(text, 27, 11);
 
   clicks++;
 
-  // ၁ ကြိမ်မှ ၇ ကြိမ်အထိ YES ကို နည်းနည်းစီကြီးမယ်
+  // ၁ ကြိမ်မှ ၇ ကြိမ်အထိ YES ကို နည်းနည်းစီ ကြီးမယ်
   if (clicks < 8) {
 
     const growth = 1 + (clicks * 0.055);
 
     yes.style.transform = `scale(${growth})`;
 
-    // NO ကို အမြဲမြင်နေရမယ်
+    // NO ကို မဖုံးစေရ
     no.style.visibility = 'visible';
   }
 
-  // ၈ ကြိမ်မြောက်မှသာ NO ကို ဖုံးမယ်
+  // ၈ ကြိမ်မြောက်မှသာ NO ကို လုံးဝဖုံးမယ်
   if (clicks === 8) {
 
     buttons.classList.add('final-step');
@@ -400,7 +418,7 @@ no.addEventListener('click', () => {
 
 });
 
-/* YES နှိပ်တဲ့အခါ */
+/* YES ခလုတ်နှိပ်တဲ့အခါ */
 yes.addEventListener('click', () => {
 
   if (finished) return;
@@ -408,13 +426,14 @@ yes.addEventListener('click', () => {
   finished = true;
 
   question.style.display = 'none';
+
   finish.style.display = 'block';
 
   const finalText = finish.querySelector('.finaltext');
 
   fitText(finalText, 30, 11);
 
-  // ပျော်ရွှင်တဲ့ နှလုံးပုံများ
+  // နှလုံးပုံလေးတွေ ကြွေကျမယ်
   for (let i = 0; i < 40; i++) {
     setTimeout(makeHeart, i * 75);
   }
@@ -453,7 +472,7 @@ setInterval(() => {
   }
 }, 1100);
 
-/* ဖုန်းမျက်နှာပြင်အရွယ်အစား ပြောင်းရင် စာသားပြန်ချိန်မယ် */
+/* ဖုန်းမျက်နှာပြင်အကျယ်အလိုက် စာသားချိန်မယ် */
 window.addEventListener('resize', () => {
 
   fitText(text, 27, 11);
@@ -466,12 +485,6 @@ window.addEventListener('resize', () => {
 
 /* စတင်ချိန် */
 fitText(text, 27, 11);
-
-fitText(
-  finish.querySelector('.finaltext'),
-  30,
-  11
-);
 
 prepareGifs();
 
