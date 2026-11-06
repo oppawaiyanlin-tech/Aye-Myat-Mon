@@ -47,9 +47,16 @@ body {
 }
 
 h1 {
-  font-size: clamp(28px,7vw,38px);
+  width: 100%;
+  padding: 0 5px;
+  font-size: 30px;
+  font-weight: bold;
   color: #dd568a;
+  line-height: 1.7;
   margin: 15px 0 20px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 #media {
@@ -60,14 +67,17 @@ h1 {
 }
 
 #text {
-  font-size: clamp(21px,5.5vw,27px);
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  padding: 0 5px;
+  font-size: 24px;
   font-weight: bold;
   line-height: 1.8;
-  margin: 15px 0 20px;
-  min-height: 45px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  margin: 15px auto 20px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 /* YES / NO ခလုတ်များ ဘေးတိုက် */
@@ -97,7 +107,7 @@ button {
   transform: translate(-50%,-50%) scale(var(--grow,1));
   transform-origin: center center;
   background: #20b45a;
-  font-size: clamp(20px,5vw,25px);
+  font-size: clamp(17px,4.5vw,24px);
   padding: 17px 23px;
   z-index: 5;
   transition: transform .3s ease;
@@ -109,7 +119,7 @@ button {
   top: 50%;
   transform: translate(-50%,-50%);
   background: #f16b65;
-  font-size: clamp(18px,4.5vw,22px);
+  font-size: clamp(15px,4vw,20px);
   padding: 16px 20px;
   z-index: 2;
 }
@@ -134,14 +144,17 @@ button {
 }
 
 #finish .finaltext {
+  display: block;
+  width: 100%;
+  padding: 0 5px;
   white-space: nowrap;
-  font-size: clamp(15px,4.5vw,25px);
+  font-size: 30px;
   font-weight: 900;
   color: #e45591;
   line-height: 1.8;
-  margin: 25px 0;
+  margin: 25px auto;
   text-align: center;
-  width: 100%;
+  overflow: hidden;
 }
 
 #finish img {
@@ -166,22 +179,6 @@ button {
     opacity: 0;
   }
 }
-
-@media(max-width:360px) {
-  #yes {
-    font-size: 17px;
-    padding: 14px 17px;
-  }
-
-  #no {
-    font-size: 15px;
-    padding: 14px 15px;
-  }
-
-  #finish .finaltext {
-    font-size: 15px;
-  }
-}
 </style>
 </head>
 
@@ -191,7 +188,7 @@ button {
 
 <section id="question">
 
-<h1>__PAGE_TITLE__</h1>
+<h1 id="pageTitle">__PAGE_TITLE__</h1>
 
 <img
   id="media"
@@ -220,7 +217,7 @@ button {
 
 <section id="finish">
 
-<div class="finaltext">
+<div class="finaltext" id="finalText">
 ကိုယ်လည်း မင်းကိုအရမ်းချစ်ပါတယ် ❤
 </div>
 
@@ -270,7 +267,38 @@ const loading = document.getElementById('loading');
 const question = document.getElementById('question');
 const finish = document.getElementById('finish');
 
-// GIF များကို ကြိုတင် Load လုပ်ခြင်း
+const pageTitle = document.getElementById('pageTitle');
+const finalText = document.getElementById('finalText');
+
+// စာသားကို တစ်ကြောင်းတည်းနဲ့ အကျယ်အလိုက် ချိန်ညှိမယ်
+function fitSingleLine(element, maxSize, minSize = 8) {
+
+  if (!element) return;
+
+  element.style.fontSize = maxSize + 'px';
+
+  let size = maxSize;
+
+  // စာသား အကျယ်အတွင်း ဆန့်သည်အထိ အရွယ်အစားလျှော့မယ်
+  while (
+    element.scrollWidth > element.clientWidth &&
+    size > minSize
+  ) {
+    size -= 0.5;
+    element.style.fontSize = size + 'px';
+  }
+}
+
+// စာသားအားလုံးကို အလိုအလျောက် ချိန်ညှိမယ်
+function fitAllText() {
+
+  fitSingleLine(pageTitle, 34, 12);
+  fitSingleLine(text, 26, 8);
+  fitSingleLine(finalText, 32, 8);
+
+}
+
+// GIF များကို ကြိုတင် Load လုပ်မယ်
 function preloadGif(path) {
 
   return new Promise((resolve) => {
@@ -284,7 +312,7 @@ function preloadGif(path) {
           await img.decode();
         }
       } catch (e) {
-        // Load ပြီးပါက ဆက်လုပ်မည်
+        // Browser decode မရလည်း Load ပြီးပါက ဆက်လုပ်မယ်
       }
 
       resolve(true);
@@ -297,7 +325,7 @@ function preloadGif(path) {
   });
 }
 
-// GIF ၈ ပုံလုံး ကြိုတင်ပြင်ဆင်မည်
+// GIF ၈ ပုံလုံး ကြိုတင်ပြင်ဆင်မယ်
 async function prepareGifs() {
 
   const results = await Promise.all(
@@ -326,7 +354,7 @@ async function prepareGifs() {
 
 }
 
-// YES က NO ကို ဖုံးနိုင်မည့် Scale တွက်ချက်ခြင်း
+// YES က NO ကို ဖုံးနိုင်မည့် Scale တွက်ချက်မယ်
 function calculateCoverScale() {
 
   const yesRect = yes.getBoundingClientRect();
@@ -352,25 +380,28 @@ function calculateCoverScale() {
 
 }
 
-// NO နှိပ်တိုင်း စာသားနှင့် GIF ချက်ချင်းပြောင်းမည်
+// NO နှိပ်တိုင်း စာသားနဲ့ GIF ချက်ချင်းပြောင်းမယ်
 no.addEventListener('click', () => {
 
   if (finished || !gifsReady || clicks >= 8) return;
 
   const index = clicks;
 
-  // စာသား ချက်ချင်းပြောင်းမည်
+  // စာသားပြောင်းမယ်
   text.textContent = messages[index];
 
-  // GIF ချက်ချင်းပြောင်းမည်
+  // GIF ချက်ချင်းပြောင်းမယ်
   media.src = gifPaths[index];
+
+  // စာသားအရှည်အလိုက် Font Size ချိန်မယ်
+  fitSingleLine(text, 26, 8);
 
   clicks++;
 
-  // YES ခလုတ် ကြီးလာမည်
+  // YES ခလုတ် တစ်ဆင့်စီ ကြီးလာမယ်
   let grow = 1 + clicks * 0.30;
 
-  // ၈ ကြိမ်မြောက်တွင် NO ကို လုံးဝဖုံးမည်
+  // ၈ ကြိမ်မြောက်မှာ NO ကို လုံးဝဖုံးမယ်
   if (clicks === 8) {
 
     grow = Math.max(
@@ -386,7 +417,7 @@ no.addEventListener('click', () => {
 
 });
 
-// YES နှိပ်လျှင် နောက်ဆုံးစာမျက်နှာ
+// YES နှိပ်လျှင် နောက်ဆုံး Screen ပြမယ်
 yes.addEventListener('click', () => {
 
   if (finished) return;
@@ -397,7 +428,10 @@ yes.addEventListener('click', () => {
 
   finish.style.display = 'block';
 
-  // နှလုံးပုံလေးများ ပေါ်လာမည်
+  // နောက်ဆုံးစာသားကို အကျယ်နဲ့ ကိုက်အောင် ချိန်မယ်
+  fitSingleLine(finalText, 32, 8);
+
+  // နှလုံးပုံလေးများ ပေါ်လာမယ်
   for (let i = 0; i < 40; i++) {
 
     setTimeout(makeHeart, i * 75);
@@ -431,7 +465,7 @@ function makeHeart() {
 
 }
 
-// နှလုံးပုံလေးများ အလိုအလျောက်ကျမည်
+// နှလုံးပုံလေးများ အလိုအလျောက်ကျမယ်
 setInterval(() => {
 
   if (!finished) {
@@ -440,7 +474,11 @@ setInterval(() => {
 
 }, 1100);
 
-// Website ဖွင့်သည်နှင့် GIF များ ကြိုတင်ပြင်ဆင်မည်
+// ဖုန်းအရွယ်အစား ပြောင်းလဲရင် စာသားပြန်ချိန်မယ်
+window.addEventListener('resize', fitAllText);
+
+// Website ဖွင့်သည်နှင့် စာသားနှင့် GIF များ ပြင်ဆင်မယ်
+fitAllText();
 prepareGifs();
 
 </script>
