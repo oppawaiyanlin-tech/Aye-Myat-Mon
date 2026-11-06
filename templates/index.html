@@ -87,10 +87,10 @@ h1 {
   overflow-wrap: anywhere;
 }
 
-/* ခလုတ်နှစ်ခု အပေါ်အောက်ထားမယ် */
+/* ခလုတ်များကို အပေါ်အောက် စီထားမယ် */
 .buttons {
   width: 100%;
-  min-height: 155px;
+  min-height: 132px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -103,8 +103,9 @@ h1 {
 
 button {
   width: min(85%, 360px);
+  height: 60px;
   min-height: 60px;
-  padding: 12px;
+  padding: 10px;
   border: 0;
   border-radius: 18px;
   color: white;
@@ -112,6 +113,7 @@ button {
   font-size: clamp(19px, 5vw, 27px);
   font-weight: bold;
   cursor: pointer;
+  flex-shrink: 0;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -119,17 +121,17 @@ button {
   background: #20b45a;
   position: relative;
   z-index: 5;
-  flex-shrink: 0;
   overflow: visible;
+  flex-shrink: 0;
+  isolation: isolate;
 }
 
-/* စာသားကို အစိမ်းရောင်အပိုင်းအပေါ်မှာ ထားမယ် */
 #yes span {
   position: relative;
   z-index: 2;
 }
 
-/* ခလုတ်မကြီးဘဲ အစိမ်းရောင်အပိုင်းကို အောက်သို့ချဲ့မယ် */
+/* အစိမ်းရောင်အပိုင်းကို အောက်ဘက်သို့သာ ချဲ့မယ် */
 #yes::after {
   content: "";
   position: absolute;
@@ -150,6 +152,11 @@ button {
   z-index: 1;
   flex-shrink: 0;
   transition: opacity 0.2s ease;
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: wait;
 }
 
 #loading {
@@ -207,7 +214,7 @@ button {
   }
 
   .buttons {
-    min-height: 135px;
+    min-height: 132px;
   }
 }
 </style>
@@ -236,13 +243,15 @@ button {
   <span>ချစ်တယ် ❤️</span>
 </button>
 
-<button id="no">
-  မချစ်ဘူး 💔
+<button id="no" disabled>
+  ပုံများပြင်ဆင်နေသည်...
 </button>
 
 </div>
 
-<div id="loading">ပုံများကို ကြိုတင်ပြင်ဆင်နေပါတယ် 💗</div>
+<div id="loading">
+  ပုံများကို ကြိုတင်ပြင်ဆင်နေပါတယ် 💗
+</div>
 
 </section>
 
@@ -298,7 +307,7 @@ const loading = document.getElementById('loading');
 const question = document.getElementById('question');
 const finish = document.getElementById('finish');
 
-/* GIF များကို ကြိုတင် Load လုပ်မယ် */
+/* GIF များအားလုံး ကြိုတင် Load လုပ်မယ် */
 function preloadImage(path) {
   return new Promise((resolve) => {
     const img = new Image();
@@ -315,53 +324,71 @@ function preloadImage(path) {
 }
 
 async function preloadAllGifs() {
-  const allPaths = [
+  const paths = [
     '/static/gifs/intro.gif',
     ...gifPaths,
     '/static/gifs/yes.gif'
   ];
 
-  await Promise.all(allPaths.map(preloadImage));
+  await Promise.all(paths.map(preloadImage));
 
   loading.style.display = 'none';
+  no.disabled = false;
+  no.textContent = 'မချစ်ဘူး 💔';
 }
 
 preloadAllGifs();
 
-/* မချစ်ဘူး နှိပ်တဲ့အခါ */
+/* မချစ်ဘူး ခလုတ် */
 no.addEventListener('click', () => {
 
-  if (finished || clicks >= 8) return;
+  if (finished || clicks >= 8 || no.disabled) {
+    return;
+  }
 
   const index = clicks;
 
-  /* စာသားနဲ့ GIF ချက်ချင်းပြောင်းမယ် */
+  /* စာသားနဲ့ GIF ကို ချက်ချင်းပြောင်းမယ် */
   text.textContent = messages[index];
   media.src = gifPaths[index];
 
   clicks++;
 
-  /* ချစ်တယ်ခလုတ် အရွယ်မကြီးဘဲ
-     အစိမ်းရောင်အပိုင်း အောက်ဘက်ကို ချဲ့မယ် */
-  const coverHeight = 60 + (clicks * 22);
+  /*
+    ၁ မှ ၇ ကြိမ်အထိ အစိမ်းရောင်အပိုင်းကို
+    အနည်းငယ်စီသာ အောက်ဘက်ချဲ့မယ်။
+
+    ၈ ကြိမ်မြောက်မှ မချစ်ဘူးကို
+    လုံးဝဖုံးနိုင်တဲ့အမြင့် သတ်မှတ်မယ်။
+  */
+
+  let coverHeight;
+
+  if (clicks < 8) {
+    coverHeight = 60 + (clicks * 4);
+  } else {
+    coverHeight = 140;
+  }
 
   yes.style.setProperty(
     '--cover-height',
     coverHeight + 'px'
   );
 
-  /* ၈ ကြိမ်မြောက်မှာ မချစ်ဘူးကို လုံးဝဖုံးမယ် */
+  /* ၈ ကြိမ်မြောက်မှာ NO ကို လုံးဝဖုံးမယ် */
   if (clicks === 8) {
-    no.style.opacity = '0';
     no.style.pointerEvents = 'none';
+    no.setAttribute('aria-hidden', 'true');
   }
 
 });
 
-/* ချစ်တယ် နှိပ်တဲ့အခါ */
+/* ချစ်တယ် ခလုတ် */
 yes.addEventListener('click', () => {
 
-  if (finished) return;
+  if (finished) {
+    return;
+  }
 
   finished = true;
 
@@ -374,7 +401,7 @@ yes.addEventListener('click', () => {
 
 });
 
-/* နှလုံးပုံလေးတွေ */
+/* နှလုံးပုံလေးများ */
 function makeHeart() {
 
   const heart = document.createElement('span');
@@ -388,7 +415,8 @@ function makeHeart() {
     '🌸'
   ][Math.floor(Math.random() * 4)];
 
-  heart.style.left = Math.random() * 100 + 'vw';
+  heart.style.left =
+    Math.random() * 100 + 'vw';
 
   heart.style.fontSize =
     (18 + Math.random() * 20) + 'px';
