@@ -67,11 +67,11 @@ h1 {
   z-index: 20;
   display: block;
   width: 100%;
-  min-height: 65px;
+  min-height: 75px;
   margin: 25px auto 30px;
   padding: 8px 2px;
   color: #603449;
-  font-size: 25px;
+  font-size: 27px;
   font-weight: 800;
   line-height: 1.7;
   text-align: center;
@@ -80,15 +80,16 @@ h1 {
   background: white;
 }
 
+/* ခလုတ်နှစ်ခု ဘေးတိုက်ယှဉ်လျက် */
 .buttons {
   position: relative;
   width: 100%;
-  height: 150px;
-  display: flex;
-  flex-direction: row;
+  height: 125px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   align-items: center;
   justify-content: center;
-  gap: 15px;
+  gap: 12px;
   overflow: visible;
   isolation: isolate;
 }
@@ -96,12 +97,14 @@ h1 {
 button {
   border: none;
   border-radius: 22px;
-  padding: 17px 20px;
+  width: 100%;
+  min-width: 0;
   min-height: 75px;
+  padding: 14px 5px;
   color: white;
   font-family: inherit;
   font-weight: bold;
-  font-size: 21px;
+  font-size: clamp(16px, 4.5vw, 23px);
   white-space: nowrap;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -113,14 +116,29 @@ button {
   z-index: 5;
   transform: scale(1);
   transform-origin: center center;
-  transition: transform 0.25s ease;
+  transition: transform 0.22s ease;
 }
 
 #no {
   background: #f16b65;
   position: relative;
-  z-index: 4;
-  transition: left 0.18s ease, top 0.18s ease;
+  z-index: 6;
+  visibility: visible;
+  transform: scale(1);
+  transition: transform 0.22s ease;
+}
+
+/* ၈ ကြိမ်မြောက်မှာ YES က NO ကို ဖုံးမယ် */
+.buttons.final-step #yes {
+  position: absolute;
+  z-index: 10;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  transform: none !important;
+  font-size: clamp(25px, 7vw, 36px);
 }
 
 #loading {
@@ -146,7 +164,7 @@ button {
 #finish .finaltext {
   width: 100%;
   white-space: nowrap;
-  font-size: 26px;
+  font-size: 28px;
   font-weight: 900;
   color: #d54f87;
   margin: 25px auto;
@@ -186,7 +204,8 @@ button {
   }
 
   button {
-    padding: 14px 12px;
+    padding-left: 3px;
+    padding-right: 3px;
   }
 }
 </style>
@@ -244,7 +263,7 @@ const messages = [
   'မရက်စက်လိုက်ပါနဲ့နော် 💔',
   'တစ်ခါလောက်တော့ စဉ်းစားပေးပါဦး 🥹',
   'အရမ်းချစ်မိနေလို့ပါနော် 🥺',
-  'နောက်တစ်ခါလောက် ပြန်စဉ်းစားပေးပါနော် 🤗',
+  'နောက်တစ်ခါလောက် ပြန်စဉ်းစားပေးပါနော် 😿',
   'ချစ်တယ်ပြောရင် မုန့်ဝယ်ကျွေးမယ်နော် 🥲',
   'ကဲပါကွာ... ချစ်တယ်လို့ပဲ ပြောလိုက်ပါတော့နော် 💗'
 ];
@@ -276,8 +295,10 @@ const buttons = document.getElementById('buttons');
 
 const preloadedGifs = [];
 
-// စာသားကို တစ်ကြောင်းတည်းနဲ့ အကျယ်အဝန်းအတွင်း ဆန့်အောင်ချိန်မယ်
+/* စာသားကို တစ်ကြောင်းတည်း အကျယ်အဝန်းအတွင်း ဆန့်အောင်ချိန်မယ် */
 function fitText(element, maxSize, minSize) {
+  if (!element) return;
+
   let size = maxSize;
 
   element.style.fontSize = size + 'px';
@@ -291,7 +312,7 @@ function fitText(element, maxSize, minSize) {
   }
 }
 
-// GIF အားလုံးကို ကြိုတင် Load လုပ်မယ်
+/* GIF များကို ကြိုတင် Load လုပ်မယ် */
 function preloadGif(path) {
   return new Promise((resolve) => {
     const img = new Image();
@@ -328,6 +349,7 @@ async function prepareGifs() {
   loading.style.display = 'none';
 }
 
+/* ကြိုတင် Load လုပ်ထားတဲ့ GIF ကို ချက်ချင်းပြောင်းမယ် */
 function changeGif(index) {
   const img = preloadedGifs[index + 1];
 
@@ -338,24 +360,7 @@ function changeGif(index) {
   }
 }
 
-// NO ခလုတ်ကို Buttons နေရာအတွင်း ရွှေ့မယ်
-function moveNo() {
-  const maxX = Math.max(
-    0,
-    buttons.clientWidth - no.offsetWidth - 8
-  );
-
-  const maxY = Math.max(
-    0,
-    buttons.clientHeight - no.offsetHeight - 8
-  );
-
-  no.style.position = 'absolute';
-  no.style.left = Math.round(Math.random() * maxX) + 'px';
-  no.style.top = Math.round(Math.random() * maxY) + 'px';
-}
-
-// NO နှိပ်လိုက်တဲ့အခါ
+/* NO နှိပ်တဲ့အခါ */
 no.addEventListener('click', () => {
 
   if (finished || !gifsReady || clicks >= 8) {
@@ -364,29 +369,38 @@ no.addEventListener('click', () => {
 
   const index = clicks;
 
-  // စာသားနှင့် GIF တစ်ပြိုင်နက် ပြောင်းမယ်
+  // စာသားနဲ့ GIF ကို တစ်ပြိုင်နက် ပြောင်းမယ်
   text.textContent = messages[index];
   changeGif(index);
 
-  fitText(text, 27, 13);
+  fitText(text, 27, 11);
 
   clicks++;
 
-  // YES ခလုတ်ကို တဖြည်းဖြည်း ကြီးလာစေမယ်
-  const growth = 1 + clicks * 0.17;
+  // ၁ ကြိမ်မှ ၇ ကြိမ်အထိ YES ကို နည်းနည်းစီကြီးမယ်
+  if (clicks < 8) {
 
-  yes.style.transform = `scale(${growth})`;
+    const growth = 1 + (clicks * 0.055);
 
-  // ၈ ကြိမ်မြောက်တွင် NO ကို လုံးဝဖုံးမယ်
-  if (clicks >= 8) {
-    no.style.visibility = 'hidden';
-    yes.style.transform = 'scale(2.5)';
-  } else {
-    moveNo();
+    yes.style.transform = `scale(${growth})`;
+
+    // NO ကို အမြဲမြင်နေရမယ်
+    no.style.visibility = 'visible';
   }
+
+  // ၈ ကြိမ်မြောက်မှသာ NO ကို ဖုံးမယ်
+  if (clicks === 8) {
+
+    buttons.classList.add('final-step');
+
+    no.style.visibility = 'hidden';
+
+    yes.style.transform = 'none';
+  }
+
 });
 
-// YES နှိပ်လိုက်တဲ့အခါ
+/* YES နှိပ်တဲ့အခါ */
 yes.addEventListener('click', () => {
 
   if (finished) return;
@@ -398,15 +412,16 @@ yes.addEventListener('click', () => {
 
   const finalText = finish.querySelector('.finaltext');
 
-  fitText(finalText, 30, 12);
+  fitText(finalText, 30, 11);
 
-  // နှလုံးပုံလေးတွေ ကြွေကျမယ်
+  // ပျော်ရွှင်တဲ့ နှလုံးပုံများ
   for (let i = 0; i < 40; i++) {
     setTimeout(makeHeart, i * 75);
   }
+
 });
 
-// နှလုံးပုံလေးများ
+/* နှလုံးပုံလေးများ */
 function makeHeart() {
 
   const heart = document.createElement('span');
@@ -431,24 +446,32 @@ function makeHeart() {
   setTimeout(() => heart.remove(), 6000);
 }
 
-// နောက်ခံနှလုံးပုံများ
+/* နောက်ခံနှလုံးပုံများ */
 setInterval(() => {
   if (!finished) {
     makeHeart();
   }
 }, 1100);
 
-// စာသားအရွယ်အစားကို ဖုန်းအကျယ်အလိုက် ချိန်မယ်
+/* ဖုန်းမျက်နှာပြင်အရွယ်အစား ပြောင်းရင် စာသားပြန်ချိန်မယ် */
 window.addEventListener('resize', () => {
-  fitText(text, 27, 13);
+
+  fitText(text, 27, 11);
 
   const finalText = finish.querySelector('.finaltext');
 
-  fitText(finalText, 30, 12);
+  fitText(finalText, 30, 11);
+
 });
 
-// စတင်ချိန်
-fitText(text, 27, 13);
+/* စတင်ချိန် */
+fitText(text, 27, 11);
+
+fitText(
+  finish.querySelector('.finaltext'),
+  30,
+  11
+);
 
 prepareGifs();
 
