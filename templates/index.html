@@ -3,7 +3,7 @@
 <html lang="my">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>Love Proposal ❤️</title>
 
 <style>
@@ -16,27 +16,27 @@ body {
   min-height: 100vh;
   display: grid;
   place-items: center;
-  background: linear-gradient(135deg,#fff0f6,#fff8fc);
-  font-family: system-ui,"Noto Sans Myanmar",sans-serif;
+  background: linear-gradient(135deg, #fff0f6, #fff8fc);
+  font-family: system-ui, "Noto Sans Myanmar", sans-serif;
   color: #603449;
   overflow-x: hidden;
-  padding: 15px 0;
 }
 
 .card {
   width: 95%;
   max-width: 550px;
-  min-height: 520px;
+  min-height: 650px;
   background: white;
-  border-radius: 25px;
+  border-radius: 28px;
   box-shadow: 0 12px 45px #e782ab35;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 22px 12px;
+  padding: 25px 12px;
   position: relative;
+  margin: 20px auto;
 }
 
 #question {
@@ -48,135 +48,145 @@ body {
 
 h1 {
   width: 100%;
-  padding: 0 5px;
-  font-size: 30px;
-  font-weight: bold;
+  font-size: clamp(25px, 7vw, 38px);
   color: #dd568a;
-  line-height: 1.7;
-  margin: 15px 0 20px;
-  text-align: center;
+  margin: 15px 0 30px;
   white-space: nowrap;
-  overflow: hidden;
 }
 
 #media {
-  width: min(65vw,230px);
-  height: 205px;
+  width: min(70vw, 260px);
+  height: 230px;
   object-fit: contain;
   display: block;
+  margin: 0 auto;
 }
 
 #text {
+  position: relative;
+  z-index: 20;
   display: block;
   width: 100%;
-  max-width: 100%;
-  padding: 0 5px;
-  font-size: 24px;
-  font-weight: bold;
-  line-height: 1.8;
-  margin: 15px auto 20px;
+  min-height: 65px;
+  margin: 25px auto 30px;
+  padding: 8px 2px;
+  color: #603449;
+  font-size: 25px;
+  font-weight: 800;
+  line-height: 1.7;
   text-align: center;
   white-space: nowrap;
-  overflow: hidden;
+  overflow: visible;
+  background: white;
 }
 
-/* YES / NO ခလုတ်များ ဘေးတိုက် */
 .buttons {
-  width: 100%;
-  height: 170px;
   position: relative;
-  display: block;
+  width: 100%;
+  height: 150px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  overflow: visible;
   isolation: isolate;
 }
 
 button {
-  border: 0;
-  border-radius: 18px;
+  border: none;
+  border-radius: 22px;
+  padding: 17px 20px;
+  min-height: 75px;
   color: white;
+  font-family: inherit;
   font-weight: bold;
-  cursor: pointer;
+  font-size: 21px;
   white-space: nowrap;
-  touch-action: manipulation;
+  cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
 
 #yes {
-  position: absolute;
-  left: 28%;
-  top: 50%;
-  transform: translate(-50%,-50%) scale(var(--grow,1));
-  transform-origin: center center;
   background: #20b45a;
-  font-size: clamp(17px,4.5vw,24px);
-  padding: 17px 23px;
+  position: relative;
   z-index: 5;
-  transition: transform .3s ease;
+  transform: scale(1);
+  transform-origin: center center;
+  transition: transform 0.25s ease;
 }
 
 #no {
-  position: absolute;
-  left: 72%;
-  top: 50%;
-  transform: translate(-50%,-50%);
   background: #f16b65;
-  font-size: clamp(15px,4vw,20px);
-  padding: 16px 20px;
-  z-index: 2;
-}
-
-#no:disabled {
-  opacity: .65;
-  cursor: wait;
+  position: relative;
+  z-index: 4;
+  transition: left 0.18s ease, top 0.18s ease;
 }
 
 #loading {
-  font-size: 13px;
-  color: #d54f87;
-  min-height: 20px;
-  margin-top: -10px;
+  font-size: 14px;
+  color: #d45c91;
+  margin-top: 8px;
 }
 
-/* နောက်ဆုံး YES Screen */
 #finish {
   display: none;
   width: 100%;
   text-align: center;
+  padding: 25px 0;
+}
+
+#finish .headline {
+  font-size: clamp(35px, 9vw, 48px);
+  font-weight: 900;
+  color: #e45591;
+  margin: 20px 0;
 }
 
 #finish .finaltext {
-  display: block;
   width: 100%;
-  padding: 0 5px;
   white-space: nowrap;
-  font-size: 30px;
+  font-size: 26px;
   font-weight: 900;
-  color: #e45591;
-  line-height: 1.8;
+  color: #d54f87;
   margin: 25px auto;
-  text-align: center;
-  overflow: hidden;
+  overflow: visible;
 }
 
 #finish img {
-  width: min(70vw,250px);
-  height: 230px;
+  width: min(75vw, 280px);
+  height: 250px;
   object-fit: contain;
-  margin-top: 16px;
+  margin-top: 15px;
 }
 
-/* နှလုံးပုံလေးများ */
 .heart {
   position: fixed;
-  top: -40px;
+  top: -45px;
   pointer-events: none;
   animation: fall 5s linear forwards;
-  z-index: 10;
+  z-index: 30;
 }
 
 @keyframes fall {
   to {
     transform: translateY(110vh) rotate(300deg);
     opacity: 0;
+  }
+}
+
+@media (max-width: 380px) {
+  .card {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .buttons {
+    gap: 8px;
+  }
+
+  button {
+    padding: 14px 12px;
   }
 }
 </style>
@@ -188,13 +198,12 @@ button {
 
 <section id="question">
 
-<h1 id="pageTitle">__PAGE_TITLE__</h1>
+<h1>__PAGE_TITLE__</h1>
 
 <img
   id="media"
   src="/static/gifs/intro.gif"
   alt="Love GIF"
-  loading="eager"
 >
 
 <div id="text">__PAGE_MESSAGE__</div>
@@ -203,22 +212,20 @@ button {
 
 <button id="yes">ချစ်တယ် ❤️</button>
 
-<button id="no" disabled>
-ပုံများပြင်ဆင်နေသည်...
-</button>
+<button id="no" disabled>ခဏစောင့်ပါ 💗</button>
 
 </div>
 
-<div id="loading">
-ပုံများကို ကြိုတင်ပြင်ဆင်နေပါတယ် 💗
-</div>
+<div id="loading">GIF ပုံများကို ကြိုတင်ပြင်ဆင်နေပါတယ် 💗</div>
 
 </section>
 
 <section id="finish">
 
-<div class="finaltext" id="finalText">
-ကိုယ်လည်း မင်းကိုအရမ်းချစ်ပါတယ် ❤
+<div class="headline">ယေး! 🎉</div>
+
+<div class="finaltext">
+ကိုယ်လည်း မင်းကို အရမ်းချစ်ပါတယ် ❤️
 </div>
 
 <img
@@ -231,15 +238,14 @@ button {
 </main>
 
 <script>
-
 const messages = [
   'အာ့လိုကြီးတော့ မငြင်းပါနဲ့ဗျာ 🥺',
   'ငိုမှာနော် 😢',
-  'မရက်စက်လိုက်ပါနော် 💔',
+  'မရက်စက်လိုက်ပါနဲ့နော် 💔',
   'တစ်ခါလောက်တော့ စဉ်းစားပေးပါဦး 🥹',
   'အရမ်းချစ်မိနေလို့ပါနော် 🥺',
-  'နောက်တစ်ခါလောက် ပြန်စဉ်းစားပေးပါနော် 😿',
-  'ချစ်တယ်ပြောရင် မုန့်ဝယ်ကျွေးမယ်လေနော် 🥲',
+  'နောက်တစ်ခါလောက် ပြန်စဉ်းစားပေးပါနော် 🤗',
+  'ချစ်တယ်ပြောရင် မုန့်ဝယ်ကျွေးမယ်နော် 🥲',
   'ကဲပါကွာ... ချစ်တယ်လို့ပဲ ပြောလိုက်ပါတော့နော် 💗'
 ];
 
@@ -266,158 +272,121 @@ const loading = document.getElementById('loading');
 
 const question = document.getElementById('question');
 const finish = document.getElementById('finish');
+const buttons = document.getElementById('buttons');
 
-const pageTitle = document.getElementById('pageTitle');
-const finalText = document.getElementById('finalText');
+const preloadedGifs = [];
 
-// စာသားကို တစ်ကြောင်းတည်းနဲ့ အကျယ်အလိုက် ချိန်ညှိမယ်
-function fitSingleLine(element, maxSize, minSize = 8) {
-
-  if (!element) return;
-
-  element.style.fontSize = maxSize + 'px';
-
+// စာသားကို တစ်ကြောင်းတည်းနဲ့ အကျယ်အဝန်းအတွင်း ဆန့်အောင်ချိန်မယ်
+function fitText(element, maxSize, minSize) {
   let size = maxSize;
 
-  // စာသား အကျယ်အတွင်း ဆန့်သည်အထိ အရွယ်အစားလျှော့မယ်
+  element.style.fontSize = size + 'px';
+
   while (
     element.scrollWidth > element.clientWidth &&
     size > minSize
   ) {
-    size -= 0.5;
+    size--;
     element.style.fontSize = size + 'px';
   }
 }
 
-// စာသားအားလုံးကို အလိုအလျောက် ချိန်ညှိမယ်
-function fitAllText() {
-
-  fitSingleLine(pageTitle, 34, 12);
-  fitSingleLine(text, 26, 8);
-  fitSingleLine(finalText, 32, 8);
-
-}
-
-// GIF များကို ကြိုတင် Load လုပ်မယ်
+// GIF အားလုံးကို ကြိုတင် Load လုပ်မယ်
 function preloadGif(path) {
-
   return new Promise((resolve) => {
-
     const img = new Image();
 
-    img.onload = async () => {
-
-      try {
-        if (img.decode) {
-          await img.decode();
-        }
-      } catch (e) {
-        // Browser decode မရလည်း Load ပြီးပါက ဆက်လုပ်မယ်
-      }
-
-      resolve(true);
-    };
-
-    img.onerror = () => resolve(false);
+    img.onload = () => resolve(img);
+    img.onerror = () => resolve(null);
 
     img.src = path;
-
   });
 }
 
-// GIF ၈ ပုံလုံး ကြိုတင်ပြင်ဆင်မယ်
 async function prepareGifs() {
+  const paths = [
+    '/static/gifs/intro.gif',
+    ...gifPaths,
+    '/static/gifs/yes.gif'
+  ];
 
   const results = await Promise.all(
-    gifPaths.map(path => preloadGif(path))
+    paths.map(path => preloadGif(path))
   );
 
-  const failed = results.some(result => !result);
-
-  if (failed) {
-
-    loading.textContent =
-      'GIF ဖိုင်တစ်ခုခုကို ပြန်စစ်ပေးပါ 💗';
-
-    no.textContent = 'GIF မရသေးပါ';
-
-    return;
-  }
+  results.forEach((img, index) => {
+    if (img) {
+      preloadedGifs[index] = img;
+    }
+  });
 
   gifsReady = true;
 
   no.disabled = false;
-
   no.textContent = 'မချစ်ဘူး 💔';
 
-  loading.textContent = '';
-
+  loading.style.display = 'none';
 }
 
-// YES က NO ကို ဖုံးနိုင်မည့် Scale တွက်ချက်မယ်
-function calculateCoverScale() {
+function changeGif(index) {
+  const img = preloadedGifs[index + 1];
 
-  const yesRect = yes.getBoundingClientRect();
-  const noRect = no.getBoundingClientRect();
-
-  const centerX = yesRect.left + yesRect.width / 2;
-  const centerY = yesRect.top + yesRect.height / 2;
-
-  const halfWidth = yes.offsetWidth / 2;
-  const halfHeight = yes.offsetHeight / 2;
-
-  const requiredX = Math.max(
-    Math.abs(noRect.left - centerX),
-    Math.abs(noRect.right - centerX)
-  ) / halfWidth;
-
-  const requiredY = Math.max(
-    Math.abs(noRect.top - centerY),
-    Math.abs(noRect.bottom - centerY)
-  ) / halfHeight;
-
-  return Math.max(requiredX, requiredY) + 0.2;
-
+  if (img) {
+    media.src = img.src;
+  } else {
+    media.src = gifPaths[index];
+  }
 }
 
-// NO နှိပ်တိုင်း စာသားနဲ့ GIF ချက်ချင်းပြောင်းမယ်
+// NO ခလုတ်ကို Buttons နေရာအတွင်း ရွှေ့မယ်
+function moveNo() {
+  const maxX = Math.max(
+    0,
+    buttons.clientWidth - no.offsetWidth - 8
+  );
+
+  const maxY = Math.max(
+    0,
+    buttons.clientHeight - no.offsetHeight - 8
+  );
+
+  no.style.position = 'absolute';
+  no.style.left = Math.round(Math.random() * maxX) + 'px';
+  no.style.top = Math.round(Math.random() * maxY) + 'px';
+}
+
+// NO နှိပ်လိုက်တဲ့အခါ
 no.addEventListener('click', () => {
 
-  if (finished || !gifsReady || clicks >= 8) return;
+  if (finished || !gifsReady || clicks >= 8) {
+    return;
+  }
 
   const index = clicks;
 
-  // စာသားပြောင်းမယ်
+  // စာသားနှင့် GIF တစ်ပြိုင်နက် ပြောင်းမယ်
   text.textContent = messages[index];
+  changeGif(index);
 
-  // GIF ချက်ချင်းပြောင်းမယ်
-  media.src = gifPaths[index];
-
-  // စာသားအရှည်အလိုက် Font Size ချိန်မယ်
-  fitSingleLine(text, 26, 8);
+  fitText(text, 27, 13);
 
   clicks++;
 
-  // YES ခလုတ် တစ်ဆင့်စီ ကြီးလာမယ်
-  let grow = 1 + clicks * 0.30;
+  // YES ခလုတ်ကို တဖြည်းဖြည်း ကြီးလာစေမယ်
+  const growth = 1 + clicks * 0.17;
 
-  // ၈ ကြိမ်မြောက်မှာ NO ကို လုံးဝဖုံးမယ်
-  if (clicks === 8) {
+  yes.style.transform = `scale(${growth})`;
 
-    grow = Math.max(
-      grow,
-      calculateCoverScale()
-    );
-
-    no.disabled = true;
-
+  // ၈ ကြိမ်မြောက်တွင် NO ကို လုံးဝဖုံးမယ်
+  if (clicks >= 8) {
+    no.style.visibility = 'hidden';
+    yes.style.transform = 'scale(2.5)';
+  } else {
+    moveNo();
   }
-
-  yes.style.setProperty('--grow', grow);
-
 });
 
-// YES နှိပ်လျှင် နောက်ဆုံး Screen ပြမယ်
+// YES နှိပ်လိုက်တဲ့အခါ
 yes.addEventListener('click', () => {
 
   if (finished) return;
@@ -425,60 +394,62 @@ yes.addEventListener('click', () => {
   finished = true;
 
   question.style.display = 'none';
-
   finish.style.display = 'block';
 
-  // နောက်ဆုံးစာသားကို အကျယ်နဲ့ ကိုက်အောင် ချိန်မယ်
-  fitSingleLine(finalText, 32, 8);
+  const finalText = finish.querySelector('.finaltext');
 
-  // နှလုံးပုံလေးများ ပေါ်လာမယ်
+  fitText(finalText, 30, 12);
+
+  // နှလုံးပုံလေးတွေ ကြွေကျမယ်
   for (let i = 0; i < 40; i++) {
-
     setTimeout(makeHeart, i * 75);
-
   }
-
 });
 
 // နှလုံးပုံလေးများ
 function makeHeart() {
 
-  const h = document.createElement('span');
+  const heart = document.createElement('span');
 
-  h.className = 'heart';
+  heart.className = 'heart';
 
-  h.textContent = [
+  heart.textContent = [
     '💗',
     '💕',
     '💖',
-    '🌸'
-  ][Math.floor(Math.random() * 4)];
+    '🌸',
+    '💞'
+  ][Math.floor(Math.random() * 5)];
 
-  h.style.left = Math.random() * 100 + 'vw';
+  heart.style.left = Math.random() * 100 + 'vw';
 
-  h.style.fontSize =
-    (18 + Math.random() * 20) + 'px';
+  heart.style.fontSize =
+    (18 + Math.random() * 25) + 'px';
 
-  document.body.appendChild(h);
+  document.body.appendChild(heart);
 
-  setTimeout(() => h.remove(), 6000);
-
+  setTimeout(() => heart.remove(), 6000);
 }
 
-// နှလုံးပုံလေးများ အလိုအလျောက်ကျမယ်
+// နောက်ခံနှလုံးပုံများ
 setInterval(() => {
-
   if (!finished) {
     makeHeart();
   }
-
 }, 1100);
 
-// ဖုန်းအရွယ်အစား ပြောင်းလဲရင် စာသားပြန်ချိန်မယ်
-window.addEventListener('resize', fitAllText);
+// စာသားအရွယ်အစားကို ဖုန်းအကျယ်အလိုက် ချိန်မယ်
+window.addEventListener('resize', () => {
+  fitText(text, 27, 13);
 
-// Website ဖွင့်သည်နှင့် စာသားနှင့် GIF များ ပြင်ဆင်မယ်
-fitAllText();
+  const finalText = finish.querySelector('.finaltext');
+
+  fitText(finalText, 30, 12);
+});
+
+// စတင်ချိန်
+fitText(text, 27, 13);
+
 prepareGifs();
 
 </script>
