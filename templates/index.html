@@ -87,7 +87,7 @@ h1 {
   overflow-wrap: anywhere;
 }
 
-/* ခလုတ်များကို အပေါ်အောက် စီထားမယ် */
+/* YES နှင့် NO ကို အပေါ်အောက်ထားမယ် */
 .buttons {
   width: 100%;
   min-height: 132px;
@@ -120,18 +120,20 @@ button {
 #yes {
   background: #20b45a;
   position: relative;
-  z-index: 5;
+  z-index: 2;
   overflow: visible;
-  flex-shrink: 0;
   isolation: isolate;
+  flex-shrink: 0;
+  cursor: pointer;
 }
 
 #yes span {
   position: relative;
   z-index: 2;
+  pointer-events: none;
 }
 
-/* အစိမ်းရောင်အပိုင်းကို အောက်ဘက်သို့သာ ချဲ့မယ် */
+/* အစိမ်းရောင်အပိုင်းကို အောက်ဘက်သို့ ချဲ့မယ် */
 #yes::after {
   content: "";
   position: absolute;
@@ -142,21 +144,17 @@ button {
   background: #20b45a;
   border-radius: 18px;
   z-index: 1;
-  pointer-events: none;
+  pointer-events: auto;
+  cursor: pointer;
   transition: height 0.35s ease;
 }
 
 #no {
   background: #f16b65;
   position: relative;
-  z-index: 1;
+  z-index: 3;
   flex-shrink: 0;
   transition: opacity 0.2s ease;
-}
-
-button:disabled {
-  opacity: 0.55;
-  cursor: wait;
 }
 
 #loading {
@@ -307,7 +305,7 @@ const loading = document.getElementById('loading');
 const question = document.getElementById('question');
 const finish = document.getElementById('finish');
 
-/* GIF များအားလုံး ကြိုတင် Load လုပ်မယ် */
+/* GIF များကို ကြိုတင် Load လုပ်မယ် */
 function preloadImage(path) {
   return new Promise((resolve) => {
     const img = new Image();
@@ -337,58 +335,9 @@ async function preloadAllGifs() {
   no.textContent = 'မချစ်ဘူး 💔';
 }
 
-preloadAllGifs();
-
-/* မချစ်ဘူး ခလုတ် */
-no.addEventListener('click', () => {
-
-  if (finished || clicks >= 8 || no.disabled) {
-    return;
-  }
-
-  const index = clicks;
-
-  /* စာသားနဲ့ GIF ကို ချက်ချင်းပြောင်းမယ် */
-  text.textContent = messages[index];
-  media.src = gifPaths[index];
-
-  clicks++;
-
-  /*
-    ၁ မှ ၇ ကြိမ်အထိ အစိမ်းရောင်အပိုင်းကို
-    အနည်းငယ်စီသာ အောက်ဘက်ချဲ့မယ်။
-
-    ၈ ကြိမ်မြောက်မှ မချစ်ဘူးကို
-    လုံးဝဖုံးနိုင်တဲ့အမြင့် သတ်မှတ်မယ်။
-  */
-
-  let coverHeight;
-
-  if (clicks < 8) {
-    coverHeight = 60 + (clicks * 4);
-  } else {
-    coverHeight = 140;
-  }
-
-  yes.style.setProperty(
-    '--cover-height',
-    coverHeight + 'px'
-  );
-
-  /* ၈ ကြိမ်မြောက်မှာ NO ကို လုံးဝဖုံးမယ် */
-  if (clicks === 8) {
-    no.style.pointerEvents = 'none';
-    no.setAttribute('aria-hidden', 'true');
-  }
-
-});
-
-/* ချစ်တယ် ခလုတ် */
-yes.addEventListener('click', () => {
-
-  if (finished) {
-    return;
-  }
+/* YES ကိုနှိပ်ရင် Finish Screen ပြမယ် */
+function showFinish() {
+  if (finished) return;
 
   finished = true;
 
@@ -398,6 +347,50 @@ yes.addEventListener('click', () => {
   for (let i = 0; i < 40; i++) {
     setTimeout(makeHeart, i * 75);
   }
+}
+
+/* YES ခလုတ်နှင့် အစိမ်းရောင်အပိုင်း နှစ်ခုလုံး နှိပ်လို့ရမယ် */
+yes.addEventListener('click', showFinish);
+
+/* NO ခလုတ် */
+no.addEventListener('click', () => {
+
+  if (finished || clicks >= 8 || no.disabled) {
+    return;
+  }
+
+  const index = clicks;
+
+  /* စာသားနှင့် GIF ကို ပြောင်းမယ် */
+  text.textContent = messages[index];
+  media.src = gifPaths[index];
+
+  clicks++;
+
+  /*
+    ၇ ကြိမ်မြောက်အထိ NO ခလုတ်ကို
+    အပေါ်မှာ မြင်နေရစေမယ်။
+
+    ၈ ကြိမ်မြောက်မှ NO ကို ဖျောက်ပြီး
+    အစိမ်းရောင်အပိုင်းကို အပြည့်ပြမယ်။
+  */
+
+  let coverHeight;
+
+  if (clicks < 8) {
+    coverHeight = 60 + clicks * 9;
+  } else {
+    coverHeight = 140;
+
+    no.style.opacity = '0';
+    no.style.pointerEvents = 'none';
+    no.disabled = true;
+  }
+
+  yes.style.setProperty(
+    '--cover-height',
+    coverHeight + 'px'
+  );
 
 });
 
@@ -435,6 +428,9 @@ setInterval(() => {
     makeHeart();
   }
 }, 1100);
+
+/* GIF အားလုံးကြိုတင် Load ပြီးမှ NO ကိုဖွင့်မယ် */
+preloadAllGifs();
 
 </script>
 
