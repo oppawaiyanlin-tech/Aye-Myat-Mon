@@ -62,7 +62,8 @@ h1 {
   line-height: 1.5;
   color: #dd568a;
   margin: 10px 0 25px;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
+  text-align: center;
 }
 
 #media {
@@ -73,15 +74,21 @@ h1 {
   margin: 5px auto 10px;
 }
 
+/* စာသားအားလုံး တစ်ကြောင်းတည်း */
 #text {
+  display: block;
   width: 100%;
-  font-size: clamp(18px, 5vw, 27px);
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+  font-size: 24px;
   font-weight: bold;
-  line-height: 1.65;
+  line-height: 1.6;
+  letter-spacing: -0.5px;
   margin: 12px 0 25px;
-  overflow-wrap: anywhere;
-  color: #603449;
   text-align: center;
+  color: #603449;
 }
 
 .buttons {
@@ -112,7 +119,7 @@ button {
   touch-action: manipulation;
 }
 
-/* YES အပေါ်မှာ အမြဲရှိမယ် */
+/* YES button */
 #yes {
   order: 1;
   position: relative;
@@ -122,7 +129,7 @@ button {
   isolation: isolate;
 }
 
-/* အစိမ်းရောင်ကို အောက်ဘက်သို့သာ ချဲ့မယ် */
+/* Green cover grows downward */
 #yes::after {
   content: "";
   position: absolute;
@@ -137,20 +144,18 @@ button {
   transition: height 0.35s ease;
 }
 
-/* YES စာသားကို အပေါ်မှာ မြင်ရမယ် */
 #yes span {
   position: relative;
   z-index: 2;
   pointer-events: none;
 }
 
-/* NO အောက်မှာ အမြဲရှိမယ် */
+/* NO button stays underneath */
 #no {
   order: 2;
   position: relative;
   z-index: 4;
   background: #f16b65;
-  transition: opacity 0.25s ease;
 }
 
 /* Loading */
@@ -160,7 +165,7 @@ button {
   margin-top: 10px;
 }
 
-/* Finish screen */
+/* Finish */
 #finish {
   display: none;
   width: 100%;
@@ -175,9 +180,11 @@ button {
 }
 
 #finish .finaltext {
+  display: block;
   width: 100%;
   white-space: nowrap;
-  font-size: clamp(13px, 4vw, 23px);
+  overflow: hidden;
+  font-size: 22px;
   font-weight: bold;
   color: #d54f87;
   margin: 15px 0;
@@ -218,17 +225,12 @@ button {
     height: 205px;
   }
 
-  #text {
-    font-size: clamp(16px, 4.7vw, 21px);
-  }
-
   button {
     width: 90%;
     min-height: 74px;
     font-size: clamp(21px, 5.8vw, 27px);
   }
 }
-
 </style>
 </head>
 
@@ -271,7 +273,7 @@ button {
 
 <div class="headline">ယေး! 🎉</div>
 
-<div class="finaltext">
+<div class="finaltext" id="finaltext">
   ကိုယ်လည်း မင်းကို အရမ်းချစ်ပါတယ် ❤
 </div>
 
@@ -289,9 +291,9 @@ const messages = [
   'အာ့လိုကြီးတော့ မငြင်းပါနဲ့ဗျာ 🥺',
   'ငိုမှာနော် 😢',
   'မရက်စက်လိုက်ပါနဲ့နော် 💔',
-  'တစ်ခါလောက်တော့ စဉ်းစားပေးပါဦး 🥹',
+  'သေချာလေး စဉ်းစားပေးပါဦး 🥹',
   'အရမ်းချစ်မိနေလို့ပါနော် 🥺',
-  'နောက်တစ်ခါလောက် ပြန်စဉ်းစားပေးပါနော် 😿',
+  'နောက်တစ်ခါလောက် ပြန်စဉ်းစားပေးပါနော် 🤗',
   'ချစ်တယ်ပြောရင် မုန့်ဝယ်ကျွေးမယ်လေနော် 🥲',
   'ကဲပါကွာ... ချစ်တယ်လို့ပဲ ပြောလိုက်ပါတော့နော် 💗'
 ];
@@ -316,12 +318,37 @@ const no = document.getElementById('no');
 const text = document.getElementById('text');
 const media = document.getElementById('media');
 const loading = document.getElementById('loading');
-
 const question = document.getElementById('question');
 const finish = document.getElementById('finish');
-const buttons = document.getElementById('buttons');
 
-/* GIF အားလုံးကို ကြိုတင် Load လုပ်ထားမယ် */
+/* Fit text into one line */
+function fitOneLine(element, maxSize, minSize) {
+  let size = maxSize;
+
+  element.style.fontSize = size + 'px';
+
+  while (
+    element.scrollWidth > element.clientWidth &&
+    size > minSize
+  ) {
+    size -= 0.5;
+    element.style.fontSize = size + 'px';
+  }
+}
+
+function fitAllText() {
+  fitOneLine(text, 24, 9);
+
+  const title = document.querySelector('h1');
+  fitOneLine(title, 38, 13);
+
+  const finalText = document.getElementById('finaltext');
+  fitOneLine(finalText, 22, 10);
+}
+
+window.addEventListener('resize', fitAllText);
+
+/* Preload GIFs */
 const gifCache = new Map();
 
 function preloadGif(path) {
@@ -342,37 +369,30 @@ function preloadGif(path) {
 }
 
 async function prepareGifs() {
-  const allPaths = [
+  const paths = [
     '/static/gifs/intro.gif',
     ...gifPaths,
     '/static/gifs/yes.gif'
   ];
 
-  await Promise.all(allPaths.map(preloadGif));
+  await Promise.all(paths.map(preloadGif));
 
   gifsReady = true;
   loading.style.display = 'none';
   no.disabled = false;
   no.textContent = 'မချစ်ဘူး 💔';
+
+  fitAllText();
 }
 
-/* GIF ကို ချက်ချင်းပြောင်းမယ် */
+/* Change GIF */
 function changeGif(path) {
-  const cached = gifCache.get(path);
-
-  if (cached && cached.complete) {
-    media.src = path;
-  } else {
-    media.src = path;
-  }
+  media.src = path;
 }
 
-/* YES အစိမ်းရောင်က NO ကို အောက်ဘက်ကနေ မဟုတ်ဘဲ
-   အပေါ်ကနေ အောက်ဘက်သို့ တဖြည်းဖြည်း ဖုံးမယ် */
+/* Cover calculation */
 function updateCover() {
-  const noBottom =
-    no.offsetTop + no.offsetHeight;
-
+  const noBottom = no.offsetTop + no.offsetHeight;
   const yesHeight = yes.offsetHeight;
 
   const neededCover = Math.max(
@@ -382,11 +402,11 @@ function updateCover() {
 
   const progress = Math.min(clicks / 8, 1);
 
-  const coverHeight = neededCover * progress;
+  const extraHeight = neededCover * progress;
 
   yes.style.setProperty(
     '--cover-extra',
-    coverHeight + 'px'
+    extraHeight + 'px'
   );
 
   if (clicks >= 8) {
@@ -395,7 +415,7 @@ function updateCover() {
   }
 }
 
-/* NO ကို နှိပ်တဲ့အခါ */
+/* NO click */
 no.addEventListener('click', () => {
   if (finished || !gifsReady || clicks >= 8) {
     return;
@@ -403,26 +423,19 @@ no.addEventListener('click', () => {
 
   const index = clicks;
 
-  /* စာသားနှင့် GIF တစ်ပြိုင်နက် ပြောင်းမယ် */
   text.textContent = messages[index];
   changeGif(gifPaths[index]);
 
   clicks++;
 
-  /* အစိမ်းရောင်အပိုင်းကို တဖြည်းဖြည်း အောက်ချဲ့မယ် */
+  fitAllText();
+
   requestAnimationFrame(() => {
     updateCover();
   });
-
-  /* ၈ ကြိမ်ပြည့်လျှင် NO ကို အပြီးဖုံးမယ် */
-  if (clicks === 8) {
-    requestAnimationFrame(() => {
-      updateCover();
-    });
-  }
 });
 
-/* YES အစိမ်းရောင်ဧရိယာ ဘယ်နေရာနှိပ်နှိပ် အလုပ်လုပ်မယ် */
+/* YES click */
 yes.addEventListener('click', () => {
   if (finished) return;
 
@@ -430,6 +443,8 @@ yes.addEventListener('click', () => {
 
   question.style.display = 'none';
   finish.style.display = 'block';
+
+  fitAllText();
 
   for (let i = 0; i < 40; i++) {
     setTimeout(makeHeart, i * 75);
