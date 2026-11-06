@@ -3,7 +3,7 @@
 <html lang="my">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#fff0f6">
 <title>Love Proposal ❤️</title>
 
@@ -12,42 +12,54 @@
   box-sizing: border-box;
 }
 
+html {
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
 body {
   margin: 0;
   min-height: 100vh;
   min-height: 100dvh;
   display: grid;
   place-items: center;
-  padding: 12px;
-  background: linear-gradient(135deg,#fff0f6,#fff8fc);
-  font-family: system-ui,"Noto Sans Myanmar",sans-serif;
+  padding: 12px 0;
+  background: linear-gradient(135deg, #fff0f6, #fff8fc);
+  font-family: system-ui, "Noto Sans Myanmar", sans-serif;
   color: #603449;
   overflow-x: hidden;
 }
 
-/* LOADING SCREEN */
+/* =========================
+   LOADING SCREEN
+========================= */
+
 #loader {
   position: fixed;
   inset: 0;
-  z-index: 9999;
-  background: linear-gradient(135deg,#fff0f6,#fff8fc);
+  z-index: 99999;
+  background: linear-gradient(135deg, #fff0f6, #fff8fc);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
   padding: 20px;
+  opacity: 1;
+  transition: opacity .35s ease;
 }
 
 #loader img {
-  width: min(72vw,300px);
+  display: block;
+  width: min(75vw, 300px);
   height: 260px;
   object-fit: contain;
 }
 
 #loader .creator {
-  font-size: clamp(17px,4.5vw,22px);
-  font-weight: 800;
+  font-size: clamp(17px, 4.5vw, 22px);
+  font-weight: bold;
   color: #d6538c;
   margin-top: 12px;
 }
@@ -60,26 +72,30 @@ body {
 }
 
 #loader .progress {
-  width: min(65vw,220px);
+  width: min(65vw, 220px);
   height: 5px;
-  border-radius: 20px;
   background: #f8d8e6;
+  border-radius: 20px;
   overflow: hidden;
-  margin-top: 18px;
+  margin-top: 16px;
 }
 
 #loader .progress-bar {
   width: 0%;
   height: 100%;
   background: #e65c98;
-  transition: width .2s linear;
+  transition: width .2s ease;
 }
 
-/* MAIN CARD */
+/* =========================
+   MAIN CARD
+========================= */
+
 .card {
-  width: 100%;
+  width: 95%;
   max-width: 550px;
-  min-height: 650px;
+  min-height: min(850px, 94vh);
+  min-height: min(850px, 94dvh);
   background: white;
   border-radius: 28px;
   box-shadow: 0 12px 45px #e782ab35;
@@ -88,96 +104,128 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 25px 15px;
+  padding: 25px 14px;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 #question {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 h1 {
-  font-size: clamp(25px,7vw,38px);
+  width: 100%;
+  font-size: clamp(25px, 6.5vw, 38px);
   line-height: 1.5;
   color: #dd568a;
-  margin: 8px 0 22px;
+  margin: 10px 0 25px;
+  white-space: nowrap;
+  text-align: center;
 }
 
 #media {
   display: block;
-  width: min(68vw,260px);
-  height: 240px;
+  width: min(65vw, 250px);
+  height: 230px;
   object-fit: contain;
-  margin: 0 auto;
+  margin: 5px auto 10px;
 }
 
+/* စာသားအားလုံး တစ်ကြောင်းတည်း */
 #text {
+  display: block;
   width: 100%;
-  font-size: clamp(19px,5.2vw,26px);
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+  font-size: 24px;
   font-weight: bold;
   line-height: 1.6;
-  margin: 18px auto 30px;
-  overflow-wrap: anywhere;
+  letter-spacing: -0.5px;
+  margin: 12px 0 25px;
+  text-align: center;
+  color: #603449;
 }
 
 .buttons {
   width: 100%;
-  max-width: 420px;
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 14px;
   position: relative;
-  min-height: 170px;
+  overflow: visible;
+  isolation: isolate;
+  padding: 8px 0 15px;
 }
 
 button {
-  border: 0;
-  border-radius: 20px;
-  padding: 18px 12px;
   width: 86%;
-  min-height: 76px;
+  min-height: 82px;
+  border: 0;
+  border-radius: 22px;
+  padding: 15px 12px;
   color: white;
-  font-weight: bold;
-  font-size: clamp(21px,6vw,30px);
   font-family: inherit;
+  font-size: clamp(23px, 6vw, 32px);
+  font-weight: bold;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
 
+/* YES button */
 #yes {
+  order: 1;
+  position: relative;
+  z-index: 5;
   background: #20b45a;
-  position: relative;
-  z-index: 3;
-  transform: none;
-  transform-origin: top center;
-  transition: height .35s ease, min-height .35s ease;
+  overflow: visible;
+  isolation: isolate;
 }
 
-#no {
-  background: #f16b65;
-  position: relative;
-  z-index: 2;
-  transition: opacity .2s;
-}
-
-/* YES covers NO from top to bottom */
-#yes.cover-all {
+/* Green cover grows downward */
+#yes::after {
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
-  min-height: 100%;
-  z-index: 5;
-  border-radius: 20px;
-  padding: 0;
+  height: calc(100% + var(--cover-extra, 0px));
+  background: #20b45a;
+  border-radius: 22px;
+  z-index: 1;
+  pointer-events: auto;
+  transition: height 0.35s ease;
 }
 
-/* FINISH */
+#yes span {
+  position: relative;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* NO button stays underneath */
+#no {
+  order: 2;
+  position: relative;
+  z-index: 4;
+  background: #f16b65;
+}
+
+/* Loading message under buttons */
+#loading {
+  font-size: 14px;
+  color: #d65a91;
+  margin-top: 10px;
+}
+
+/* Finish */
 #finish {
   display: none;
   width: 100%;
@@ -185,30 +233,35 @@ button {
 }
 
 #finish .headline {
-  font-size: clamp(30px,8vw,42px);
+  font-size: clamp(30px, 8vw, 42px);
   font-weight: 800;
   color: #e45591;
   margin: 15px 0;
 }
 
 #finish .finaltext {
+  display: block;
+  width: 100%;
   white-space: nowrap;
-  font-size: clamp(12px,3.8vw,21px);
+  overflow: hidden;
+  font-size: 22px;
   font-weight: bold;
   color: #d54f87;
+  margin: 15px 0;
 }
 
 #finish img {
-  width: min(75vw,280px);
-  height: 250px;
+  display: block;
+  width: min(75vw, 270px);
+  height: 240px;
   object-fit: contain;
-  margin-top: 16px;
+  margin: 15px auto;
 }
 
-/* FALLING HEARTS */
+/* Floating hearts */
 .heart {
   position: fixed;
-  top: -40px;
+  top: -45px;
   pointer-events: none;
   animation: fall 5s linear forwards;
   z-index: 10;
@@ -221,18 +274,21 @@ button {
   }
 }
 
-@media (max-width:380px) {
+/* Small phone screens */
+@media (max-width: 380px) {
   .card {
-    min-height: 600px;
     padding: 20px 10px;
   }
 
-  #text {
-    font-size: 18px;
+  #media {
+    width: min(62vw, 210px);
+    height: 205px;
   }
 
   button {
     width: 90%;
+    min-height: 74px;
+    font-size: clamp(21px, 5.8vw, 27px);
   }
 }
 </style>
@@ -240,11 +296,15 @@ button {
 
 <body>
 
-<!-- LOADING SCREEN -->
+<!-- =========================
+     LOADING SCREEN
+========================= -->
+
 <div id="loader">
+
   <img
     src="/static/gifs/loading.gif"
-    alt="Loading"
+    alt="BuBu DuDu Myanmar"
     fetchpriority="high"
   >
 
@@ -252,16 +312,20 @@ button {
     BuBu DuDu Myanmar မှ ဖန်တီးထားသည်
   </div>
 
-  <div class="waiting">
+  <div class="waiting" id="waitingText">
     ခဏစောင့်ပါ 💗
   </div>
 
   <div class="progress">
     <div class="progress-bar" id="progressBar"></div>
   </div>
+
 </div>
 
-<!-- MAIN WEBSITE -->
+<!-- =========================
+     ORIGINAL WEBSITE
+========================= -->
+
 <main class="card" id="mainCard" style="visibility:hidden">
 
 <section id="question">
@@ -272,25 +336,35 @@ button {
   id="media"
   src="/static/gifs/intro.gif"
   alt="Love GIF"
+  fetchpriority="high"
 >
 
 <div id="text">__PAGE_MESSAGE__</div>
 
 <div class="buttons" id="buttons">
 
-<button id="yes">ချစ်တယ် ❤️</button>
+<button id="yes" type="button">
+  <span>ချစ်တယ် ❤️</span>
+</button>
 
-<button id="no">မချစ်ဘူး 💔</button>
+<button id="no" type="button">
+  မချစ်ဘူး 💔
+</button>
 
 </div>
+
+<div id="loading">
+  ပုံများကို ကြိုတင်ပြင်ဆင်နေပါတယ် 💗
+</div>
+
 </section>
 
 <section id="finish">
 
 <div class="headline">ယေး! 🎉</div>
 
-<div class="finaltext">
-ငါလည်း နင့်ကိုအရမ်းချစ်တယ် ❤
+<div class="finaltext" id="finaltext">
+  ကိုယ်လည်း မင်းကို အရမ်းချစ်ပါတယ် ❤
 </div>
 
 <img
@@ -303,9 +377,23 @@ button {
 </main>
 
 <script>
-/* ALL GIF FILES */
+
+/* =========================
+   ORIGINAL MESSAGES
+========================= */
+
+const messages = [
+  'အာ့လိုကြီးတော့ မငြင်းပါနဲ့ဗျာ 🥺',
+  'ငိုမှာနော် 😢',
+  'မရက်စက်လိုက်ပါနဲ့နော် 💔',
+  'တစ်ခါလောက်တော့ စဉ်းစားပေးပါဦး 🥹',
+  'အရမ်းချစ်မိနေလို့ပါနော် 🥺',
+  'နောက်တစ်ခါလောက် ပြန်စဉ်းစားပေးပါနော် 😭',
+  'ချစ်တယ်ပြောရင် မုန့်ဝယ်ကျွေးမယ်လေနော် 🥲',
+  'ကဲပါကွာ... ချစ်တယ်လို့ပဲ ပြောလိုက်ပါတော့နော် 💗'
+];
+
 const gifPaths = [
-  '/static/gifs/intro.gif',
   '/static/gifs/step1.gif',
   '/static/gifs/step2.gif',
   '/static/gifs/step3.gif',
@@ -313,40 +401,63 @@ const gifPaths = [
   '/static/gifs/step5.gif',
   '/static/gifs/step6.gif',
   '/static/gifs/step7.gif',
-  '/static/gifs/step8.gif',
-  '/static/gifs/yes.gif'
-];
-
-/* NO CLICK MESSAGES */
-const messages = [
-  'အာ့လိုကြီးတော့ မငြင်းပါနဲ့ဗျာ 🥺',
-  'ငိုမှာနော် 😢',
-  'မရက်စက်လိုက်ပါနော် 💔',
-  'သေချာ စဉ်းစားပေးပါဦး 🥹',
-  'အရမ်းချစ်မိနေလို့ပါနော် 🥺',
-  'နောက်တစ်ခါလောက် ပြန်စဉ်းစားပေးပါနော် 🤗',
-  'ချစ်တယ်ပြောရင် မုန့်ဝယ်ကျွေးမယ်လေနော် 🥲',
-  'ကဲပါကွာ... ချစ်တယ်လို့ပဲ ပြောလိုက်ပါတော့နော် 💗'
+  '/static/gifs/step8.gif'
 ];
 
 let clicks = 0;
 let finished = false;
-let readyCount = 0;
-
-const loader = document.getElementById('loader');
-const mainCard = document.getElementById('mainCard');
-const progressBar = document.getElementById('progressBar');
+let gifsReady = false;
 
 const yes = document.getElementById('yes');
 const no = document.getElementById('no');
 const text = document.getElementById('text');
 const media = document.getElementById('media');
-
+const loading = document.getElementById('loading');
 const question = document.getElementById('question');
 const finish = document.getElementById('finish');
 
-/* PRELOAD ALL GIFS BEFORE SHOWING WEBSITE */
-function preloadOne(path) {
+const loader = document.getElementById('loader');
+const mainCard = document.getElementById('mainCard');
+const progressBar = document.getElementById('progressBar');
+const waitingText = document.getElementById('waitingText');
+
+/* =========================
+   FIT TEXT INTO ONE LINE
+========================= */
+
+function fitOneLine(element, maxSize, minSize) {
+  let size = maxSize;
+
+  element.style.fontSize = size + 'px';
+
+  while (
+    element.scrollWidth > element.clientWidth &&
+    size > minSize
+  ) {
+    size -= 0.5;
+    element.style.fontSize = size + 'px';
+  }
+}
+
+function fitAllText() {
+  fitOneLine(text, 24, 9);
+
+  const title = document.querySelector('h1');
+  fitOneLine(title, 38, 13);
+
+  const finalText = document.getElementById('finaltext');
+  fitOneLine(finalText, 22, 10);
+}
+
+window.addEventListener('resize', fitAllText);
+
+/* =========================
+   PRELOAD GIFS
+========================= */
+
+const gifCache = new Map();
+
+function preloadGif(path) {
   return new Promise((resolve, reject) => {
     const img = new Image();
 
@@ -355,9 +466,13 @@ function preloadOne(path) {
         if (img.decode) {
           await img.decode();
         }
+
+        gifCache.set(path, img);
         resolve(path);
+
       } catch (error) {
-        // Image has loaded; decoding may be unsupported.
+        // Image loaded successfully.
+        gifCache.set(path, img);
         resolve(path);
       }
     };
@@ -369,110 +484,207 @@ function preloadOne(path) {
     img.src = path;
 
     if (img.complete && img.naturalWidth > 0) {
+      gifCache.set(path, img);
       resolve(path);
     }
   });
 }
 
-async function prepareWebsite() {
-  const results = await Promise.allSettled(
-    gifPaths.map(async (path) => {
-      await preloadOne(path);
+/* =========================
+   PREPARE ALL GIFS
+========================= */
 
-      readyCount++;
+async function prepareGifs() {
 
-      progressBar.style.width =
-        (readyCount / gifPaths.length * 100) + '%';
+  const paths = [
+    '/static/gifs/intro.gif',
+    ...gifPaths,
+    '/static/gifs/yes.gif'
+  ];
 
-      return path;
-    })
-  );
+  let completed = 0;
 
-  const failed = results.filter(
-    result => result.status === 'rejected'
-  );
+  try {
 
-  if (failed.length > 0) {
-    document.querySelector('#loader .waiting').textContent =
-      'GIF ဖိုင်တချို့ Load မဖြစ်သေးပါ။ ဖိုင်တွေကို စစ်ဆေးပေးပါ။';
+    await Promise.all(
+      paths.map(async (path) => {
 
-    return;
+        await preloadGif(path);
+
+        completed++;
+
+        progressBar.style.width =
+          (completed / paths.length * 100) + '%';
+
+      })
+    );
+
+    /* All 10 GIFs are ready */
+
+    gifsReady = true;
+
+    /* Restore original intro GIF */
+    media.src = '/static/gifs/intro.gif';
+
+    no.disabled = false;
+    no.textContent = 'မချစ်ဘူး 💔';
+
+    fitAllText();
+
+    /* Show original website */
+    mainCard.style.visibility = 'visible';
+
+    loader.style.opacity = '0';
+
+    setTimeout(() => {
+      loader.style.display = 'none';
+    }, 350);
+
+  } catch (error) {
+
+    /* Keep loading screen visible if any GIF fails */
+
+    waitingText.textContent =
+      'GIF ပုံများကို ဖွင့်မရသေးပါ။ ဖိုင်များကို စစ်ဆေးပေးပါ 💗';
+
+    console.error('GIF loading failed:', error);
+
   }
-
-  // All GIFs are ready.
-  mainCard.style.visibility = 'visible';
-
-  loader.style.opacity = '0';
-  loader.style.transition = 'opacity .3s ease';
-
-  setTimeout(() => {
-    loader.style.display = 'none';
-  }, 300);
 }
 
-prepareWebsite();
+/* =========================
+   CHANGE GIF
+========================= */
 
-/* CHANGE NO GIF AND MESSAGE IMMEDIATELY */
+function changeGif(path) {
+  media.src = path;
+}
+
+/* =========================
+   COVER CALCULATION
+========================= */
+
+function updateCover() {
+
+  const noBottom = no.offsetTop + no.offsetHeight;
+  const yesHeight = yes.offsetHeight;
+
+  const neededCover = Math.max(
+    0,
+    noBottom - yes.offsetTop - yesHeight
+  );
+
+  const progress = Math.min(clicks / 8, 1);
+
+  const extraHeight = neededCover * progress;
+
+  yes.style.setProperty(
+    '--cover-extra',
+    extraHeight + 'px'
+  );
+
+  if (clicks >= 8) {
+    no.style.visibility = 'hidden';
+    no.style.pointerEvents = 'none';
+  }
+}
+
+/* =========================
+   NO BUTTON CLICK
+========================= */
+
 no.addEventListener('click', () => {
-  if (finished || clicks >= 8) return;
+
+  if (finished || !gifsReady || clicks >= 8) {
+    return;
+  }
 
   const index = clicks;
 
   text.textContent = messages[index];
 
-  // Change GIF immediately.
-  media.src = gifPaths[index + 1];
+  changeGif(gifPaths[index]);
 
   clicks++;
 
-  // Grow YES button progressively.
-  if (clicks < 8) {
-    const percent = 86 + clicks * 1.75;
-    yes.style.width = Math.min(percent, 100) + '%';
-  }
+  fitAllText();
 
-  // On the 8th NO click, YES completely covers NO.
-  if (clicks === 8) {
-    yes.classList.add('cover-all');
-    no.style.visibility = 'hidden';
-  }
+  requestAnimationFrame(() => {
+    updateCover();
+  });
+
 });
 
-/* YES BUTTON: ENTIRE GREEN AREA IS CLICKABLE */
+/* =========================
+   YES BUTTON CLICK
+========================= */
+
 yes.addEventListener('click', () => {
-  if (finished) return;
+
+  if (finished || !gifsReady) return;
 
   finished = true;
 
   question.style.display = 'none';
   finish.style.display = 'block';
 
+  fitAllText();
+
   for (let i = 0; i < 40; i++) {
     setTimeout(makeHeart, i * 75);
   }
+
 });
 
-/* HEART ANIMATION */
+/* =========================
+   FLOATING HEARTS
+========================= */
+
 function makeHeart() {
+
   const h = document.createElement('span');
 
   h.className = 'heart';
 
-  h.textContent = ['💗','💕','💖','🌸'][
-    Math.floor(Math.random() * 4)
-  ];
+  h.textContent = [
+    '💗',
+    '💕',
+    '💖',
+    '🌸',
+    '💞'
+  ][Math.floor(Math.random() * 5)];
 
   h.style.left = Math.random() * 100 + 'vw';
-  h.style.fontSize = (18 + Math.random() * 20) + 'px';
+
+  h.style.fontSize =
+    (18 + Math.random() * 20) + 'px';
 
   document.body.appendChild(h);
 
-  setTimeout(() => h.remove(), 6000);
+  setTimeout(() => {
+    h.remove();
+  }, 6000);
+
 }
 
+/* Background decoration */
+
 setInterval(() => {
-  if (!finished) makeHeart();
-}, 1100);
+
+  if (!finished) {
+    makeHeart();
+  }
+
+}, 1500);
+
+/* =========================
+   START WEBSITE
+========================= */
+
+no.disabled = true;
+no.textContent = 'ပုံများပြင်ဆင်နေသည်...';
+
+prepareGifs();
 
 </script>
 
